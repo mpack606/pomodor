@@ -12,10 +12,6 @@ function App() {
     const { tasks, activeTaskId, addTask, selectTask, updateTaskTime } = useTasks();
     const { requestPermission, sendNotification, playSound } = useNotification();
 
-    // Request permission on mount (or maybe on first start click?)
-    React.useEffect(() => {
-        requestPermission();
-    }, [requestPermission]);
 
     // Alternative: useEffect in App that syncs with timer state.
     // This is often simpler in React than callbacks for state-dependent logic.
@@ -93,11 +89,9 @@ function App() {
                         onStart={() => {
                             if (!activeTaskId && timer.mode === 'work') {
                                 alert("Please select a task first!");
-                                // Or handle "Unallocated" logic? Req says: "Active Task: Timer is always associated with an active task (or "Unallocated" if none selected)."
-                                // I'll auto-create an "Unallocated" task if none exists?
-                                // For now, alert to select.
                                 return;
                             }
+                            requestPermission();
                             timer.start();
                         }}
                         onPause={timer.pause}

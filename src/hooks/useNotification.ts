@@ -1,18 +1,15 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 
 export const useNotification = () => {
-    const permissionRef = useRef<NotificationPermission>(Notification.permission);
-
     const requestPermission = useCallback(async () => {
         if (!('Notification' in window)) return;
-        if (permissionRef.current !== 'granted') {
-            const permission = await Notification.requestPermission();
-            permissionRef.current = permission;
+        if (Notification.permission !== 'granted') {
+            await Notification.requestPermission();
         }
     }, []);
 
     const sendNotification = useCallback((title: string, options?: NotificationOptions) => {
-        if (permissionRef.current === 'granted') {
+        if (Notification.permission === 'granted') {
             new Notification(title, options);
         }
     }, []);
